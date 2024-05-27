@@ -2,35 +2,59 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, Image, TouchableOpacity, BackHandler } from 'react-native';
 // import axiosInstance from '../../asstes/axiosInstance';
 import axios from 'axios';
+import { Alert } from 'react-native';
 
-const LoginPage = ({ navigation }) => {
+const SignupPage = ({ navigation }) => {
     const [email, setEmail] = useState('');
+    const [username, setusername] = useState('');
+
     const [password, setPassword] = useState('');
-    const [err, seterr] = useState('');
-    // const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    // const [img, setimg] = useState('https://tse3.mm.bing.net/th?id=OIP.qRR7p-IbVm-DO4OkFBbJRwHaHa&pid=Api&P=0&h=180');
     const [img, setimg] = useState('https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180');
+    const [err, seterr] = useState('');
 
 
-    const handleimage = () => {
-        setShowPassword(!showPassword);
-        if (img === 'https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180') {
-            setimg('https://tse3.mm.bing.net/th?id=OIP.qRR7p-IbVm-DO4OkFBbJRwHaHa&pid=Api&P=0&h=180');
-        }
-        else {
-            setimg('https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180');
-        }
+    useEffect(() => {
+        const backAction = () => {
+            Alert.alert(
+                'Confirm',
+                'Do you Want to leave?',
+                [
+                    {
+                        text: 'Cancel',
+                        onPress: () => null,
+                        style: 'cancel',
+                    },
+                    { text: 'Logout', onPress: () => handleLogout() },
+                ],
+                { cancelable: false }
+            );
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        return () => backHandler.remove();
+    }, []);
+
+    const handleLogout = () => {
+        // Add your logout logic here
+        BackHandler.exitApp();
+        // For example, navigate to the login screen or clear the authentication token
+        console.log('Logout');
     };
 
     const handleClick = async () => {
         console.log(email, password);
-        await axios.post('http://192.168.4.4:3001/user/login', { email: email, password: password }).then(response => {
+        await axios.post('http://192.168.4.4:3001/user/Signup', { email: email, password: password, username: username }).then(response => {
             console.log(response.data);
-            if (response.data.message === 'Logged in sucessfully') { navigation.navigate('Home'); }
+            if (response.data.message === 'Account created sucessfully') { }
             seterr(response.data.message);
             setTimeout(() => { seterr(''); }, 3000);
         }).catch((error) => {
@@ -40,12 +64,32 @@ const LoginPage = ({ navigation }) => {
 
         });
     };
+    const handleimage = () => {
+        setShowPassword(!showPassword);
+        if (img === 'https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180') {
+            setimg('https://tse3.mm.bing.net/th?id=OIP.qRR7p-IbVm-DO4OkFBbJRwHaHa&pid=Api&P=0&h=180');
+        }
+        else {
+            setimg('https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180');
+        }
+    };
+    console.log(img);
 
     return (
-
         <View style={styles.container}>
-            {/* <PasswordInput /> */}
-            <Text style={styles.title}>Login Here</Text>
+            <Text style={styles.title}>SignUp Here</Text>
+            <View style={styles.inputContainer}>
+                {/* <Icon name="user" size={20} color="#000" style={styles.icon} /> */}
+                <Image src={'https://tse1.mm.bing.net/th?id=OIP.PVzhiWdGqLXudD0PNtsMtwHaHa&pid=Api&P=0&h=180'} style={{ ...styles.img, width: 20, marginLeft: 10 }} />
+                <TextInput
+                    style={{ ...styles.input, marginLeft: 10 }}
+                    placeholder="UserName"
+                    placeholderTextColor="#999"
+                    value={username}
+                    onChangeText={setusername}
+                    keyboardType="email-address"
+                />
+            </View>
             <View style={styles.inputContainer}>
                 {/* <Icon name="user" size={20} color="#000" style={styles.icon} /> */}
                 <Image src={'https://tse1.mm.bing.net/th?id=OIP.2_5Gqun0VPY0b8V0AngGLgHaHa&pid=Api&P=0&h=180'} style={styles.img} />
@@ -64,17 +108,15 @@ const LoginPage = ({ navigation }) => {
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
-                    secureTextEntry={!showPassword}
                     placeholderTextColor="#999"
                     value={password}
                     onChangeText={setPassword}
+                    secureTextEntry={!showPassword}
                 />
-                <TouchableOpacity onPress={handleimage}>
+                <TouchableOpacity onPress={handleimage} >
 
                     <Image src={img} style={{ ...styles.img, width: 30, height: 20, marginRight: 10 }} />
                 </TouchableOpacity>
-
-
             </View>
             <View >
                 <Text style={styles.err}>
@@ -82,16 +124,17 @@ const LoginPage = ({ navigation }) => {
                 </Text>
             </View>
             <View style={{ ...styles.buttonContainer }}>
-                <Button title="Login" onPress={handleClick} color="#e3571b" />
+                <Button title="SignUp" onPress={handleClick} color="#e3571b" />
             </View>
             <View style={{ display: 'flex', flexDirection: 'row', marginTop: -30, marginLeft: 120, }}>
-                <Text style={styles.txt}> Don't have a acoount.....?  </Text>
+                <Text style={styles.txt}> Do you have a acoount.....?  </Text>
                 <Text style={styles.txtt} onPress={() => {
                     console.log('hii');
-                    navigation.navigate('SignUp');
+                    navigation.navigate('Login');
 
-                }}>Register</Text>
+                }}>Login</Text>
             </View>
+
         </View>
     );
 };
@@ -153,4 +196,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default LoginPage;
+export default SignupPage;
