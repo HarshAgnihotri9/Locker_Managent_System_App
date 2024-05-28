@@ -2,7 +2,7 @@
 /* eslint-disable comma-dangle */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Text, Image, TouchableOpacity, BackHandler, Alert } from 'react-native';
 // import axiosInstance from '../../asstes/axiosInstance';
 import axios from 'axios';
 
@@ -14,6 +14,39 @@ const LoginPage = ({ navigation }) => {
     const [showPassword, setShowPassword] = useState(false);
     // const [img, setimg] = useState('https://tse3.mm.bing.net/th?id=OIP.qRR7p-IbVm-DO4OkFBbJRwHaHa&pid=Api&P=0&h=180');
     const [img, setimg] = useState('https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180');
+
+    useEffect(() => {
+        const backAction = () => {
+            Alert.alert(
+                'Confirm',
+                'Do you Want to leave?',
+                [
+                    {
+                        text: 'Cancel',
+                        onPress: () => null,
+                        style: 'cancel',
+                    },
+                    { text: 'Yes', onPress: () => handleLogout() },
+                ],
+                { cancelable: false }
+            );
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction
+        );
+
+        return () => backHandler.remove();
+    }, []);
+
+    const handleLogout = () => {
+        // Add your logout logic here
+        BackHandler.exitApp();
+        // For example, navigate to the login screen or clear the authentication token
+        console.log('Logout');
+    };
 
 
     const handleimage = () => {

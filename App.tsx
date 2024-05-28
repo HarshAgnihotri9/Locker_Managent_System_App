@@ -18,8 +18,8 @@ function App() {
     // </View>
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="SignUp" component={SignupPage} />
+        <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
+        <Stack.Screen name="SignUp" component={SignupPage} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={Home} />
 
 

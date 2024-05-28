@@ -28,7 +28,7 @@ const SignupPage = ({ navigation }) => {
                         onPress: () => null,
                         style: 'cancel',
                     },
-                    { text: 'Logout', onPress: () => handleLogout() },
+                    { text: 'Yes', onPress: () => handleLogout() },
                 ],
                 { cancelable: false }
             );
@@ -73,7 +73,6 @@ const SignupPage = ({ navigation }) => {
             setimg('https://tse1.mm.bing.net/th?id=OIP.LOn1bbMBlxHaYZYTGfiQLgHaHa&pid=Api&P=0&h=180');
         }
     };
-    console.log(img);
 
     return (
         <View style={styles.container}>
