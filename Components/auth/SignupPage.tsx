@@ -54,7 +54,6 @@ const SignupPage = ({ navigation }) => {
         console.log(email, password);
         await axios.post('http://192.168.4.4:3001/user/Signup', { email: email, password: password, username: username }).then(response => {
             console.log(response.data);
-            if (response.data.message === 'Account created sucessfully') { }
             seterr(response.data.message);
             setTimeout(() => { seterr(''); }, 3000);
         }).catch((error) => {
